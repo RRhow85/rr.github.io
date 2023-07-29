@@ -61,10 +61,23 @@
 
 		ws = new WebSocket(`wss://server0${a}.gartic.io/socket.io/?EIO=3&transport=websocket`);
 
+
 		ws.onopen = () => {
+			setInterval(function() {
+
+
 			ws.send(`42[3,{"v":20000,"nick":"ST‎${Math.floor(Math.random() * 960)}","avatar":0,"sala":"${b}"}]`);
 			ws.send(`42[46,1675119253574]`);
+
+			function close() {
+				ws.close()
+			}
+		  setTimeout(close, 600);
+		  }, 1000);
 		}
+
+        
+
 
 		ws.onmessage = (m) => {
 			const d = JSON.parse(m.data.slice(2));
@@ -78,8 +91,7 @@
 
 				if(x == '.all'){
 					for(let i = 0; i < r.length; i++){
-						ws.send(`42[45,${p},["${r[0].id}",true]]`);
-						ws.send(`42[45,${p},["${r[1].id}",true]]`);
+						ws.send(`42[45,${p},["${r[i].id}",true]]`);
 					}
 					x = '';
 				}
@@ -99,6 +111,11 @@
 			ws.send(`2`);
 		}, 25000);
 	}
+		setInterval(() => {
+			console.clear
+		}, 100);
+
+
 </script>
 
 
