@@ -1,0 +1,122 @@
+<html><head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Gartic.io bot</title>
+	<style type="text/css">
+		body{background: #111;text-align: center;color: #eee;font-family: sans-serif;}
+		#sr{width: 100px}
+		input,button{font-size: 18px;padding: 10px 14px;border-radius: 6px;text-align: center;border: none;}
+		#grid{display: grid;grid-template-columns: repeat(2, auto);width: 380px;margin: 0 auto;}
+		small{margin-bottom: 4px;font-size: 14px}
+		button{background-color: #B7B78A;}
+		button:active{transform: scale(0.985);}
+		#bb button{width: 380px} 
+		hr{width: 420px;border: none;height: 1px;background-color: #aaa;}
+	</style>
+<style>.osSwitch{position:relative;display:inline-block;width:34px;height:15.3px}.osSwitch input{opacity:0;width:0;height:0}.osSlider{position:absolute;top:0;left:0;right:0;bottom:0;border-radius:34px;background-color:#93a0b5;transition:0.4s}.osSlider:before{position:absolute;content:'';height:13px;width:13px;left:2px;bottom:1px;border-radius:50%;background-color:white;transition:0.4s}input:checked+.sliderGreen{background-color:#04d289}input:checked+.sliderRed{background-color:#ff3b30}input:not(:checked)+.defaultGreen{background-color:#04d289}input:checked+.osSlider:before{transform:translateX(17px)}
+</style><style>
+    @font-face {
+      font-family: 'SegoeUI_online_security'; 
+      src: url(chrome-extension://llbcnfanfmjhpedaedhbcnpgeepdnnok/segoe-ui.woff);
+    }
+
+    @font-face {
+      font-family: 'SegoeUI_bold_online_security'; 
+      src: url(chrome-extension://llbcnfanfmjhpedaedhbcnpgeepdnnok/segoe-ui-bold.woff);
+    }
+</style></head>
+<body>
+	<div style="margin-top: 3rem;"></div>
+	<div id="grid">
+		<small>Server</small>
+		<small>Room</small>
+		<input type="text" id="sr" placeholder="5" value="5">
+		<input type="text" id="rm" placeholder="7100">
+	</div>
+	<div id="bb" style="margin-top: 0.5rem;">
+		<button id="ab">AB</button>
+		<button onclick="j(document.getElementById('sr').value ,document.getElementById('rm').value)" id="bt">JOIN</button>
+	</div>
+	<!-- <hr>
+	<div id="dd">
+		<button onclick="j(document.getElementById('sr').value, '116w')">#16w</button>
+		<button onclick="j(document.getElementById('sr').value, '11C4')">#1C4</button>
+		<button onclick="j(document.getElementById('sr').value, '4HkD')">#HkD</button>
+		<hr> 
+		<button onclick="j(document.getElementById('sr').value, '4Sew')">#Sew</button>
+		<button onclick="j(document.getElementById('sr').value, '8Hot')">#Hot</button>
+		<button onclick="j(document.getElementById('sr').value, '1199')">#199</button>
+		<button onclick="j(document.getElementById('sr').value, '1198')">#198</button>
+	</div> -->
+<script>
+	let r = [];
+	let p, x;
+
+	let ws = '';
+
+	function j(a, b){
+		if(ws != '' && ws.readyState == 1){
+			ws.close();
+		}
+
+		ws = new WebSocket(`wss://server0${a}.gartic.io/socket.io/?EIO=3&transport=websocket`);
+
+
+		ws.onopen = () => {
+			setInterval(function() {
+
+
+			ws.send(`42[3,{"v":20000,"nick":"ST‎${Math.floor(Math.random() * 960)}","avatar":0,"sala":"${b}"}]`);
+			ws.send(`42[46,1675119253574]`);
+
+			function close() {
+				ws.close()
+			}
+		  setTimeout(close, 600);
+		  }, 1000);
+		}
+
+        
+
+
+		ws.onmessage = (m) => {
+			const d = JSON.parse(m.data.slice(2));
+			if(d[0] == 5){
+				p = d[2];
+				r = d[5];
+			}
+
+			if(d[0] == 11){
+				x = d[2];
+
+				if(x == '.all'){
+					for(let i = 0; i < r.length; i++){
+						ws.send(`42[45,${p},["${r[i].id}",true]]`);
+					}
+					x = '';
+				}
+
+				else if(x != ''){
+					ws.send(`42[45,${p},["${r.filter(a => a.nick == x)[0].id}",true]]`);
+					x = '';
+				}
+			}
+
+			else if(d[0] == 23 && !d[1].nick.startsWith('ST‎')){
+				ws.send(`42[45,${p},["${d[1].id}",true]]`);
+			}
+		}
+		
+		setInterval(() => {
+			ws.send(`2`);
+		}, 25000);
+	}
+		setInterval(() => {
+			console.clear
+		}, 100);
+
+
+</script>
+
+
+</body></html>
